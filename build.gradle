@@ -257,6 +257,7 @@ dependencies {
     annotationProcessor ("org.springframework.boot:spring-boot-configuration-processor") {
         exclude group: 'com.vaadin.external.google', module: 'android-json'
     }
+    compile "org.web3j:web3j-spring-boot-starter:1.6.0"
     testCompile "com.jayway.jsonpath:json-path"
     testCompile "io.cucumber:cucumber-junit"
     testCompile "io.cucumber:cucumber-spring"

@@ -101,6 +101,9 @@ jhipster:
         license:
         license-url:
 
+web3j:
+    httpTimeoutSeconds: 600
+
 # ===================================================================
 # Application specific properties
 # Add your own application properties here, see the ApplicationProperties class
