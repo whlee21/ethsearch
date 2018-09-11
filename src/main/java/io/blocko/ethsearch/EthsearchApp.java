@@ -2,7 +2,7 @@ package io.blocko.ethsearch;
 
 import io.blocko.ethsearch.config.ApplicationProperties;
 import io.blocko.ethsearch.config.DefaultProfileUtil;
-
+import io.blocko.ethsearch.extension.SpringExtension;
 import io.github.jhipster.config.JHipsterConstants;
 
 import org.slf4j.Logger;
@@ -11,7 +11,13 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.liquibase.LiquibaseProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
+
+import akka.actor.ActorRef;
+import akka.actor.ActorSystem;
+import akka.event.Logging;
+import akka.event.LoggingAdapter;
 
 import javax.annotation.PostConstruct;
 import java.net.InetAddress;
@@ -58,7 +64,9 @@ public class EthsearchApp {
     public static void main(String[] args) {
         SpringApplication app = new SpringApplication(EthsearchApp.class);
         DefaultProfileUtil.addDefaultProfile(app);
-        Environment env = app.run(args).getEnvironment();
+        // Environment env = app.run(args).getEnvironment();
+        ApplicationContext appContext = app.run(args);
+        Environment env = appContext.getEnvironment();
         String protocol = "http";
         if (env.getProperty("server.ssl.key-store") != null) {
             protocol = "https";
@@ -81,5 +89,13 @@ public class EthsearchApp {
             hostAddress,
             env.getProperty("server.port"),
             env.getActiveProfiles());
+
+        ActorSystem system = appContext.getBean(ActorSystem.class);
+        final LoggingAdapter akkaLog = Logging.getLogger(system, "EthsearchApp");
+
+        SpringExtension ext = appContext.getBean(SpringExtension.class);
+        ActorRef ethActor = system.actorOf(ext.props("EthsearchActor"));
+        ethActor.tell("ready spring actor", null);
     }
+
 }
