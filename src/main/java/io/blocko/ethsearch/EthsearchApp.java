@@ -89,13 +89,6 @@ public class EthsearchApp {
             hostAddress,
             env.getProperty("server.port"),
             env.getActiveProfiles());
-
-        ActorSystem system = appContext.getBean(ActorSystem.class);
-        final LoggingAdapter akkaLog = Logging.getLogger(system, "EthsearchApp");
-
-        SpringExtension ext = appContext.getBean(SpringExtension.class);
-        ActorRef ethActor = system.actorOf(ext.props("EthsearchActor"));
-        ethActor.tell("ready spring actor", null);
     }
 
 }

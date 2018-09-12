@@ -13,13 +13,16 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.env.Environment;
 
+import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
+import akka.event.Logging;
+import akka.event.LoggingAdapter;
 import io.blocko.ethsearch.extension.SpringExtension;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @Configuration
-@ComponentScan(basePackages = {"io.blocko.ethsearch.actors", "io.blocko.ethsearch.extension"})
+// @ComponentScan(basePackages = {"io.blocko.ethsearch.actors", "io.blocko.ethsearch.extension"})
 public class EthsearchAkkaConfiguration {
 
     private final Logger log = LoggerFactory.getLogger(EthsearchAkkaConfiguration.class);
@@ -52,5 +55,11 @@ public class EthsearchAkkaConfiguration {
     @EventListener(ApplicationReadyEvent.class)
     public void onApplicationReadyEvent() {
         log.debug("onApplicationReadyEvent");
+        ActorSystem system = applicationContext.getBean(ActorSystem.class);
+        final LoggingAdapter akkaLog = Logging.getLogger(system, "EthsearchApp");
+
+        SpringExtension ext = applicationContext.getBean(SpringExtension.class);
+        ActorRef ethActor = system.actorOf(ext.props("ethsearchActor"));
+        ethActor.tell("ready spring actor", null);
     }
 }
