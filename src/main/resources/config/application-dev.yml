@@ -139,4 +139,11 @@ jhipster:
 # https://www.jhipster.tech/common-application-properties/
 # ===================================================================
 
+# web3j
+web3j:
+    client-address: https://rinkeby.infura.io/
+    # client-address: http://localhost:8545/
+    # network-id: 15
+    httpTimeoutSeconds: 600
+
 # application:

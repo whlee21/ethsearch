@@ -10,6 +10,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.env.Environment;
 
@@ -22,6 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @Configuration
+@Lazy
 // @ComponentScan(basePackages = {"io.blocko.ethsearch.actors", "io.blocko.ethsearch.extension"})
 public class EthsearchAkkaConfiguration {
 
