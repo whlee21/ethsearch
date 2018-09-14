@@ -141,9 +141,11 @@ jhipster:
 
 # web3j
 web3j:
-    client-address: https://rinkeby.infura.io/
-    # client-address: http://localhost:8545/
-    # network-id: 15
+    # client-address: https://rinkeby.infura.io/v3/f386e7040bea41feac06f89b3128adb8
+    # client-address: https://ropsten.etherscan.io/
+    # client-address: /Users/whlee21/.rinkeby/geth.ipc
+    client-address: http://localhost:8545/
+    network-id: 15
     httpTimeoutSeconds: 600
 
 # application:

@@ -1,5 +1,7 @@
 package io.blocko.ethsearch.watch;
 
+import java.math.BigInteger;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -12,8 +14,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.web3j.protocol.core.methods.response.EthBlock;
+import org.web3j.protocol.core.methods.response.EthBlock.TransactionObject;
+import org.web3j.protocol.core.methods.response.EthBlock.TransactionResult;
 
-@Component
+// @Component
 public class SmartContractWatchDaemon {
 
     private final Logger log = LoggerFactory.getLogger(SmartContractWatchDaemon.class);
@@ -33,7 +38,7 @@ public class SmartContractWatchDaemon {
             public void run() {
                 try {
                     log.info("thread started");
-                    doTask();
+                    scanBlocks();
                 } catch (Exception e) {
                     log.error("{}", e);
                 }
@@ -42,10 +47,20 @@ public class SmartContractWatchDaemon {
         executorService.shutdown();
     }
 
-    private void doTask() {
+    private void scanBlocks() {
         while(!stopThread) {
             try {
-                web3jService.getLastBlockAsync();
+                // CompletableFuture<EthBlock> block = web3jService.getLastBlockAsync();
+                // CompletableFuture.allOf(block).join();
+                // EthBlock ethBlock = block.get();
+                // log.debug("{}", ethBlock.getBlock().getNumber());
+                // for (TransactionResult tnx : ethBlock.getBlock().getTransactions()) {
+                //     log.debug("{}", ((TransactionObject)tnx.get()).getInput());
+                // }
+                // web3jService.readStorage();
+                // web3jService.readObservable();
+                web3jService.getLastBlockObservable();
+
                 Thread.sleep(1000);
             } catch (Exception e) {
                 e.printStackTrace();
