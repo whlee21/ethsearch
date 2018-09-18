@@ -258,6 +258,8 @@ dependencies {
         exclude group: 'com.vaadin.external.google', module: 'android-json'
     }
     compile "org.web3j:web3j-spring-boot-starter:1.6.0"
+    compile "org.web3j:core:${web3j_version}"
+    compile "org.web3j:abi:${web3j_version}"
     compile "com.typesafe.akka:akka-actor_2.11:${akka_version}"
     compile "com.typesafe.akka:akka-slf4j_2.11:${akka_version}"
     testCompile "com.jayway.jsonpath:json-path"

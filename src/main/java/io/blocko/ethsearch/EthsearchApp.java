@@ -4,6 +4,8 @@ import io.blocko.ethsearch.config.ApplicationProperties;
 import io.blocko.ethsearch.config.DefaultProfileUtil;
 import io.blocko.ethsearch.extension.SpringExtension;
 import io.github.jhipster.config.JHipsterConstants;
+import rx.Observable;
+import rx.Subscription;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,11 +17,20 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
+import org.web3j.abi.EventEncoder;
+import org.web3j.abi.FunctionReturnDecoder;
+import org.web3j.abi.TypeReference;
+import org.web3j.abi.datatypes.Address;
+import org.web3j.abi.datatypes.Event;
+import org.web3j.abi.datatypes.Utf8String;
+import org.web3j.abi.datatypes.generated.Uint256;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.DefaultBlockParameterName;
-import org.web3j.protocol.core.methods.request.Transaction;
+import org.web3j.protocol.core.methods.request.EthFilter;
 import org.web3j.protocol.core.methods.response.EthCoinbase;
 import org.web3j.protocol.core.methods.response.EthGetTransactionCount;
+import org.web3j.protocol.core.methods.response.EthLog;
+import org.web3j.protocol.core.methods.response.Transaction;
 
 import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
@@ -27,12 +38,15 @@ import akka.event.Logging;
 import akka.event.LoggingAdapter;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 
 import java.io.IOException;
 import java.math.BigInteger;
 import java.net.InetAddress;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 @SpringBootApplication
 @EnableConfigurationProperties({LiquibaseProperties.class, ApplicationProperties.class})
@@ -41,10 +55,20 @@ public class EthsearchApp {
 
     private static final Logger log = LoggerFactory.getLogger(EthsearchApp.class);
 
+    private String CONTRACT_ADDRESS = "0x19023a1DD51e44A53221e6ea0a4722c6763974C2";
+        public static final Event ADDEDPOST_EVENT = new Event("AddedPost",
+        Arrays.<TypeReference<?>>asList(new TypeReference<Uint256>() {},
+         new TypeReference<Utf8String>() {},
+          new TypeReference<Utf8String>() {},
+          new                          TypeReference<Utf8String>() {},
+           new TypeReference<Address>() {}));
+    // "0x19023a1dd51e44a53221e6ea0a4722c6763974c2";
     private final Environment env;
 
     @Autowired
     private Web3j web3j;
+
+    private Subscription txSubscription;
 
     public EthsearchApp(Environment env) {
         this.env = env;
@@ -114,27 +138,71 @@ public class EthsearchApp {
 
             log.info("New tx: id={}, block={}, from={}, to={}, value={}", tx.getHash(), tx.getBlockHash(), tx.getFrom(), tx.getTo(), tx.getValue().intValue());
 
-            try {
+            // try {
 
-                EthCoinbase coinbase = web3j.ethCoinbase().send();
-                EthGetTransactionCount transactionCount = web3j.ethGetTransactionCount(tx.getFrom(), DefaultBlockParameterName.LATEST).send();
-                log.info("Tx count: {}", transactionCount.getTransactionCount().intValue());
+                // EthCoinbase coinbase = web3j.ethCoinbase().send();
+                // EthGetTransactionCount transactionCount = web3j.ethGetTransactionCount(tx.getFrom(), DefaultBlockParameterName.LATEST).send();
+                // log.info("Tx count: {}", transactionCount.getTransactionCount().intValue());
 
-                if (transactionCount.getTransactionCount().intValue() % 10 == 0) {
+                // if (transactionCount.getTransactionCount().intValue() % 10 == 0) {
 
-                    EthGetTransactionCount tc = web3j.ethGetTransactionCount(coinbase.getAddress(), DefaultBlockParameterName.LATEST).send();
-                    Transaction transaction = Transaction.createEtherTransaction(coinbase.getAddress(), tc.getTransactionCount(), tx.getValue(), BigInteger.valueOf(21_000), tx.getFrom(), tx.getValue());
-                    web3j.ethSendTransaction(transaction).send();
-                }
+                //     EthGetTransactionCount tc = web3j.ethGetTransactionCount(coinbase.getAddress(), DefaultBlockParameterName.LATEST).send();
+                //     Transaction transaction = Transaction.createEtherTransaction(coinbase.getAddress(), tc.getTransactionCount(), tx.getValue(), BigInteger.valueOf(21_000), tx.getFrom(), tx.getValue());
+                //     web3j.ethSendTransaction(transaction).send();
+                // }
 
-            } catch (IOException e) {
-                log.error("Error getting transactions", e);
-            }
+            // } catch (IOException e) {
+            //     log.error("Error getting transactions", e);
+            // }
 
         });
 
-        log.info("Subscribed");
+        // web3j.ethGetLogs(ethFilter)
 
-}
+        Event event = new Event("AddedPost",
+        Arrays.<TypeReference<?>>asList(new TypeReference<Uint256>() {},
+        new TypeReference<Utf8String>() {},
+        new TypeReference<Utf8String>() {},
+        new TypeReference<Utf8String>() {},
+        new TypeReference<Address>() {}
+        ));
+
+        // public static final Event ADDEDPOST_EVENT = new Event("AddedPost",
+        // Arrays.<TypeReference<?>>asList(new TypeReference<Uint256>() {},
+        //  new TypeReference<Utf8String>() {},
+        //   new TypeReference<Utf8String>() {},
+        //   new                          TypeReference<Utf8String>() {},
+        //    new TypeReference<Address>() {}));
+        String encodedEventSignature = EventEncoder.encode(ADDEDPOST_EVENT);
+        // List<Type> results = FunctionReturnDecoder.decode(
+        //     lograwInput, outputParameters))
+
+        EthFilter ethFilter = createFilterForEvent(encodedEventSignature, CONTRACT_ADDRESS);
+
+        web3j.ethLogObservable(ethFilter).subscribe(ethLog -> {
+                log.debug("ethLog {}", ethLog);
+            }
+        );
+
+        log.info("Subscribed");
+    }
+
+    @PreDestroy
+    public void unsubscribe() {
+        // if (txSubscription != null) {
+        //     txSubscription.unsubscribe();
+        // }
+    }
+
+    private EthFilter createFilterForEvent(
+        String encodedEventSignature, String contractAddress) {
+        EthFilter ethFilter = new EthFilter(
+            DefaultBlockParameterName.EARLIEST,
+            DefaultBlockParameterName.LATEST,
+            contractAddress
+        );
+        ethFilter.addSingleTopic(encodedEventSignature);
+        return ethFilter;
+    }
 
 }
