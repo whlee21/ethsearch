@@ -1,0 +1,27 @@
+buildscript {
+  repositories {
+    maven {
+      url "https://plugins.gradle.org/m2/"
+    }
+  }
+  dependencies {
+    classpath "org.web3j:web3j-gradle-plugin:0.1.2"
+  }
+}
+
+apply plugin: org.web3j.gradle.plugin.Web3jPlugin
+
+web3j {
+    generatedPackageName = "io.blocko.ethsearch.contracts"
+    generatedFilesBaseDir = "$buildDir/generated/source/web3j"
+}
+
+sourceSets {
+    main {
+        solidity {
+            srcDir {
+                "$projectDir/contracts"
+            }
+        }
+    }
+}

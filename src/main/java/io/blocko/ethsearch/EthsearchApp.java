@@ -31,6 +31,7 @@ import org.web3j.protocol.core.methods.response.EthCoinbase;
 import org.web3j.protocol.core.methods.response.EthGetTransactionCount;
 import org.web3j.protocol.core.methods.response.EthLog;
 import org.web3j.protocol.core.methods.response.Transaction;
+import org.web3j.crypto.Credentials;
 
 import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
@@ -48,6 +49,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import io.blocko.ethsearch.contracts.EthBoard;
+import static io.blocko.ethsearch.contracts.EthBoard.ADDEDPOST_EVENT;
+
 @SpringBootApplication
 @EnableConfigurationProperties({LiquibaseProperties.class, ApplicationProperties.class})
 @ServletComponentScan
@@ -55,13 +59,11 @@ public class EthsearchApp {
 
     private static final Logger log = LoggerFactory.getLogger(EthsearchApp.class);
 
-    private String CONTRACT_ADDRESS = "0x19023a1DD51e44A53221e6ea0a4722c6763974C2";
-        public static final Event ADDEDPOST_EVENT = new Event("AddedPost",
-        Arrays.<TypeReference<?>>asList(new TypeReference<Uint256>() {},
-         new TypeReference<Utf8String>() {},
-          new TypeReference<Utf8String>() {},
-          new                          TypeReference<Utf8String>() {},
-           new TypeReference<Address>() {}));
+    private String CONTRACT_ADDRESS = "19023a1DD51e44A53221e6ea0a4722c6763974C2";
+    private String PRIVATE_KEY = "81bd7f6498d0642e5900b9cde860180aabe4b5d275617a15dace4ccc05a18207";
+    private BigInteger GAS_LIMIT = BigInteger.valueOf(80000000L);
+    private BigInteger GAS_PRICE = BigInteger.valueOf(2000000000L);
+
     // "0x19023a1dd51e44a53221e6ea0a4722c6763974c2";
     private final Environment env;
 
@@ -132,11 +134,11 @@ public class EthsearchApp {
 
 
     @PostConstruct
-    public void listen() {
+    public void listen() throws Exception {
 
-        web3j.transactionObservable().subscribe(tx -> {
+        // web3j.transactionObservable().subscribe(tx -> {
 
-            log.info("New tx: id={}, block={}, from={}, to={}, value={}", tx.getHash(), tx.getBlockHash(), tx.getFrom(), tx.getTo(), tx.getValue().intValue());
+            // log.info("New tx: id={}, block={}, from={}, to={}, value={}", tx.getHash(), tx.getBlockHash(), tx.getFrom(), tx.getTo(), tx.getValue().intValue());
 
             // try {
 
@@ -155,34 +157,28 @@ public class EthsearchApp {
             //     log.error("Error getting transactions", e);
             // }
 
-        });
+        // });
 
         // web3j.ethGetLogs(ethFilter)
 
-        Event event = new Event("AddedPost",
-        Arrays.<TypeReference<?>>asList(new TypeReference<Uint256>() {},
-        new TypeReference<Utf8String>() {},
-        new TypeReference<Utf8String>() {},
-        new TypeReference<Utf8String>() {},
-        new TypeReference<Address>() {}
-        ));
+        // String encodedEventSignature = EventEncoder.encode(ADDEDPOST_EVENT);
 
-        // public static final Event ADDEDPOST_EVENT = new Event("AddedPost",
-        // Arrays.<TypeReference<?>>asList(new TypeReference<Uint256>() {},
-        //  new TypeReference<Utf8String>() {},
-        //   new TypeReference<Utf8String>() {},
-        //   new                          TypeReference<Utf8String>() {},
-        //    new TypeReference<Address>() {}));
-        String encodedEventSignature = EventEncoder.encode(ADDEDPOST_EVENT);
-        // List<Type> results = FunctionReturnDecoder.decode(
-        //     lograwInput, outputParameters))
+        // EthFilter ethFilter = createFilterForEvent(encodedEventSignature, CONTRACT_ADDRESS);
 
-        EthFilter ethFilter = createFilterForEvent(encodedEventSignature, CONTRACT_ADDRESS);
+        // web3j.ethLogObservable(ethFilter).subscribe(ethLog -> {
+        //         log.debug("ethLog {}", ethLog);
+        //     }
+        // );
 
-        web3j.ethLogObservable(ethFilter).subscribe(ethLog -> {
-                log.debug("ethLog {}", ethLog);
-            }
-        );
+        Credentials credentials = Credentials.create(PRIVATE_KEY);
+        EthBoard ethBoard = EthBoard.load(CONTRACT_ADDRESS, web3j, credentials, GAS_PRICE, GAS_LIMIT);
+
+        ethBoard.addedPostEventObservable(DefaultBlockParameterName.EARLIEST, DefaultBlockParameterName.LATEST)
+        .subscribe(l -> {
+            log.debug("ethLog {} {} {} {} {}", l.account, l.ownerName, l.postID, l.title, l.content);
+        });
+
+        // List<EthLog.LogResult> filterLogs = createFilterForEvent1(encodedEventSignature, CONTRACT_ADDRESS);
 
         log.info("Subscribed");
     }
@@ -203,6 +199,18 @@ public class EthsearchApp {
         );
         ethFilter.addSingleTopic(encodedEventSignature);
         return ethFilter;
+    }
+
+    private List<EthLog.LogResult> createFilterForEvent1(
+        String encodedEventSignature, String contractAddress) throws Exception {
+        EthFilter ethFilter = new EthFilter(
+            DefaultBlockParameterName.EARLIEST,
+            DefaultBlockParameterName.LATEST,
+            contractAddress
+        );
+        ethFilter.addSingleTopic(encodedEventSignature);
+        EthLog ethLog = web3j.ethGetLogs(ethFilter).send();
+        return ethLog.getLogs();
     }
 
 }

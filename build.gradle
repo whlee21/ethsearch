@@ -127,6 +127,7 @@ apply from: 'gradle/sonar.gradle'
 //hibernate:spring:io.blocko.ethsearch.domain?dialect=org.hibernate.dialect.H2Dialect&amp;hibernate.physical_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy&amp;hibernate.implicit_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
 apply from: 'gradle/swagger.gradle'
 //jhipster-needle-gradle-apply-from - JHipster will add additional gradle scripts to be applied here
+apply from: 'gradle/web3j.gradle'
 
 if (project.hasProperty('prod')) {
     apply from: 'gradle/profile_prod.gradle'
@@ -260,6 +261,7 @@ dependencies {
     compile "org.web3j:web3j-spring-boot-starter:1.6.0"
     compile "org.web3j:core:${web3j_version}"
     compile "org.web3j:abi:${web3j_version}"
+    compile "org.web3j:crypto:${web3j_version}"
     compile "com.typesafe.akka:akka-actor_2.11:${akka_version}"
     compile "com.typesafe.akka:akka-slf4j_2.11:${akka_version}"
     testCompile "com.jayway.jsonpath:json-path"
@@ -303,3 +305,4 @@ if (project.hasProperty('nodeInstall')) {
 compileJava.dependsOn processResources
 processResources.dependsOn cleanResources,bootBuildInfo
 bootBuildInfo.mustRunAfter cleanResources
+
