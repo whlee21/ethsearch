@@ -126,6 +126,7 @@ apply from: 'gradle/docker.gradle'
 apply from: 'gradle/sonar.gradle'
 //hibernate:spring:io.blocko.ethsearch.domain?dialect=org.hibernate.dialect.H2Dialect&amp;hibernate.physical_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy&amp;hibernate.implicit_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
 apply from: 'gradle/swagger.gradle'
+apply from: 'gradle/web3j.gradle'
 //jhipster-needle-gradle-apply-from - JHipster will add additional gradle scripts to be applied here
 
 if (project.hasProperty('prod')) {
@@ -272,6 +273,11 @@ dependencies {
     testCompile "org.hamcrest:hamcrest-library"
     testCompile "com.h2database:h2"
     liquibaseRuntime "com.h2database:h2"
+
+    compile "org.web3j:web3j-spring-boot-starter:1.6.0"
+    compile "org.web3j:core:3.5.0"
+    compile "org.web3j:abi:3.5.0"
+    compile "org.web3j:crypto:3.5.0"
     //jhipster-needle-gradle-dependency - JHipster will add additional dependencies here
 }
 
