@@ -274,9 +274,9 @@ dependencies {
     liquibaseRuntime "com.h2database:h2"
 
     compile "org.web3j:web3j-spring-boot-starter:1.6.0"
-    compile "org.web3j:core:3.5.0"
-    compile "org.web3j:abi:3.5.0"
-    compile "org.web3j:crypto:3.5.0"
+    compile "org.web3j:core:${web3j_version}"
+    compile "org.web3j:abi:${web3j_version}"
+    compile "org.web3j:crypto:${web3j_version}"
     //jhipster-needle-gradle-dependency - JHipster will add additional dependencies here
 }
 
