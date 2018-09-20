@@ -1,0 +1,35 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="wallet">
+            <h2><span jhiTranslate="ethsearchApp.wallet.detail.title">Wallet</span> {{wallet.id}}</h2>
+            <hr>
+            <jhi-alert-error></jhi-alert-error>
+            <dl class="row-md jh-entity-details">
+                <dt><span jhiTranslate="ethsearchApp.wallet.account">Account</span></dt>
+                <dd>
+                    <span>{{wallet.account}}</span>
+                </dd>
+                <dt><span jhiTranslate="ethsearchApp.wallet.privateKey">Private Key</span></dt>
+                <dd>
+                    <span>{{wallet.privateKey}}</span>
+                </dd>
+                <dt><span jhiTranslate="ethsearchApp.wallet.user">User</span></dt>
+                <dd>
+                    {{wallet.user?.login}}
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back"> Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/wallet', wallet.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit"> Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

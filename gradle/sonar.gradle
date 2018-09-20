@@ -13,7 +13,7 @@ jacocoTestReport {
 
 sonarqube {
     properties {
-        property "sonar.host.url", "http://localhost:9001"
+        property "sonar.host.url", "http://192.168.0.85:9000"
         property "sonar.exclusions", "src/main/webapp/content/**/*.*,src/main/webapp/i18n/*.js, build/www/**/*.*"
 
         property "sonar.issue.ignore.multicriteria", "S3437,S4502,S4684,UndocumentedApi,BoldAndItalicTagsCheck"
@@ -41,7 +41,7 @@ sonarqube {
         property "sonar.java.codeCoveragePlugin", "jacoco"
         property "sonar.testExecutionReportPaths", "${project.buildDir}/test-results/jest/TESTS-results-sonar.xml"
         property "sonar.typescript.lcov.reportPaths", "${project.buildDir}/test-results/lcov.info"
-        property "sonar.junit.reportsPath", "${project.buildDir}/test-results/test/"
+        property "sonar.junit.reportPaths", "${project.buildDir}/test-results/test"
         property "sonar.sources", "${project.projectDir}/src/main/"
         property "sonar.tests", "${project.projectDir}/src/test/"
     }
