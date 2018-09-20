@@ -174,11 +174,10 @@ public class EthsearchApp {
         EthBoard ethBoard = EthBoard.load(CONTRACT_ADDRESS, web3j, credentials, GAS_PRICE, GAS_LIMIT);
 
         ethBoard.addedPostEventObservable(DefaultBlockParameterName.EARLIEST, DefaultBlockParameterName.LATEST)
-        .subscribe(l -> {
-            log.debug("ethLog {} {} {} {} {}", l.account, l.ownerName, l.postID, l.title, l.content);
+        .subscribe(response -> {
+            log.debug("ethLog {} {} {} {} {} {}", response.account, response.postID, response.ownerName,
+             response.title, response.content, response.log);
         });
-
-        // List<EthLog.LogResult> filterLogs = createFilterForEvent1(encodedEventSignature, CONTRACT_ADDRESS);
 
         log.info("Subscribed");
     }
@@ -188,29 +187,6 @@ public class EthsearchApp {
         // if (txSubscription != null) {
         //     txSubscription.unsubscribe();
         // }
-    }
-
-    private EthFilter createFilterForEvent(
-        String encodedEventSignature, String contractAddress) {
-        EthFilter ethFilter = new EthFilter(
-            DefaultBlockParameterName.EARLIEST,
-            DefaultBlockParameterName.LATEST,
-            contractAddress
-        );
-        ethFilter.addSingleTopic(encodedEventSignature);
-        return ethFilter;
-    }
-
-    private List<EthLog.LogResult> createFilterForEvent1(
-        String encodedEventSignature, String contractAddress) throws Exception {
-        EthFilter ethFilter = new EthFilter(
-            DefaultBlockParameterName.EARLIEST,
-            DefaultBlockParameterName.LATEST,
-            contractAddress
-        );
-        ethFilter.addSingleTopic(encodedEventSignature);
-        EthLog ethLog = web3j.ethGetLogs(ethFilter).send();
-        return ethLog.getLogs();
     }
 
 }
