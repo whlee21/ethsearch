@@ -4,7 +4,7 @@
       "packageName": "io.blocko.ethsearch",
       "nativeLanguage": "ko"
     },
-    "jhipsterVersion": "5.3.1",
+    "jhipsterVersion": "5.3.4",
     "applicationType": "monolith",
     "baseName": "ethsearch",
     "packageName": "io.blocko.ethsearch",
