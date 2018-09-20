@@ -1,0 +1,25 @@
+
+{
+    "ethsearchApp": {
+        "wallet" : {
+            "home": {
+                "title": "Wallets",
+                "createLabel": "Create a new Wallet",
+                "createOrEditLabel": "Create or edit a Wallet",
+                "search": "Search for Wallet"
+            },
+            "created": "A new Wallet is created with identifier {{ param }}",
+            "updated": "A Wallet is updated with identifier {{ param }}",
+            "deleted": "A Wallet is deleted with identifier {{ param }}",
+            "delete": {
+                "question": "Are you sure you want to delete Wallet {{ id }}?"
+            },
+            "detail": {
+                "title": "Wallet"
+            },
+            "account": "Account",
+            "privateKey": "Private Key",
+            "user": "User"
+        }
+    }
+}
