@@ -1,0 +1,42 @@
+{
+  "generator-jhipster": {
+    "promptValues": {
+      "packageName": "io.blocko.ethsearch",
+      "nativeLanguage": "ko"
+    },
+    "jhipsterVersion": "5.3.1",
+    "applicationType": "monolith",
+    "baseName": "ethsearch",
+    "packageName": "io.blocko.ethsearch",
+    "packageFolder": "io/blocko/ethsearch",
+    "serverPort": "8080",
+    "authenticationType": "jwt",
+    "cacheProvider": "ehcache",
+    "enableHibernateCache": true,
+    "websocket": false,
+    "databaseType": "sql",
+    "devDatabaseType": "h2Disk",
+    "prodDatabaseType": "mariadb",
+    "searchEngine": "elasticsearch",
+    "messageBroker": false,
+    "serviceDiscoveryType": false,
+    "buildTool": "gradle",
+    "enableSwaggerCodegen": true,
+    "jwtSecretKey": "NjA2Nzc2OTE4N2QxOGQ2YmY5ZmRhMzk0N2RjNjA3ZGQ3OWIzM2FhOWJlMTViYWNlYzlhYWE4MmEyMzA2Njg0ODg1MmM5N2QyYTc1NDRmNWFjMDMxMjMzMWM5ZjA4ZGRkYjI3YTVmNWVhZTk3ZTZlMjg2M2JiZDA3YmI3YjdlNWI=",
+    "clientFramework": "angularX",
+    "useSass": true,
+    "clientPackageManager": "npm",
+    "testFrameworks": [
+      "gatling",
+      "cucumber",
+      "protractor"
+    ],
+    "jhiPrefix": "jhi",
+    "enableTranslation": true,
+    "nativeLanguage": "ko",
+    "languages": [
+      "ko",
+      "en"
+    ]
+  }
+}
