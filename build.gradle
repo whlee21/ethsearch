@@ -10,8 +10,8 @@ buildscript {
     dependencies {
         classpath "org.springframework.boot:spring-boot-gradle-plugin:${spring_boot_version}"
         classpath "io.spring.gradle:propdeps-plugin:0.0.10.RELEASE"
-        classpath "org.openapitools:openapi-generator-gradle-plugin:3.0.1"
-        classpath "gradle.plugin.com.gorylenko.gradle-git-properties:gradle-git-properties:1.5.1"
+        classpath "org.openapitools:openapi-generator-gradle-plugin:3.2.3"
+        classpath "gradle.plugin.com.gorylenko.gradle-git-properties:gradle-git-properties:1.5.2"
         //jhipster-needle-gradle-buildscript-dependency - JHipster will add additional gradle build script plugins here
     }
 }
@@ -21,9 +21,9 @@ plugins {
     id "net.ltgt.apt-eclipse" version "0.18"
     id "net.ltgt.apt-idea" version "0.18"
     id "net.ltgt.apt" version "0.18"
-    id "io.spring.dependency-management" version "1.0.5.RELEASE"
+    id "io.spring.dependency-management" version "1.0.6.RELEASE"
     id "com.moowork.node" version "1.2.0"
-    id 'org.liquibase.gradle' version '2.0.0'
+    id 'org.liquibase.gradle' version '2.0.1'
     //jhipster-needle-gradle-plugins - JHipster will add additional gradle plugins here
 }
 
@@ -124,7 +124,6 @@ task cucumberTestReport(type: TestReport) {
 
 apply from: 'gradle/docker.gradle'
 apply from: 'gradle/sonar.gradle'
-hibernate:spring:io.blocko.ethsearch.domain?dialect=org.hibernate.dialect.H2Dialect&amp;hibernate.physical_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy&amp;hibernate.implicit_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
 apply from: 'gradle/swagger.gradle'
 //jhipster-needle-gradle-apply-from - JHipster will add additional gradle scripts to be applied here
 
@@ -177,6 +176,7 @@ configurations {
 repositories {
     mavenLocal()
     mavenCentral()
+    jcenter()
     //jhipster-needle-gradle-repositories - JHipster will add additional repositories
 }
 
@@ -192,7 +192,6 @@ dependencies {
     compile "io.dropwizard.metrics:metrics-servlet"
     compile "io.dropwizard.metrics:metrics-servlets"
     compile "net.logstash.logback:logstash-logback-encoder"
-    compile "com.fasterxml.jackson.datatype:jackson-datatype-json-org"
     compile "com.fasterxml.jackson.datatype:jackson-datatype-hppc"
     compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
     compile "com.fasterxml.jackson.datatype:jackson-datatype-hibernate5"
@@ -224,7 +223,7 @@ dependencies {
     compile "org.springframework.boot:spring-boot-starter-data-jpa"
     compile "org.springframework.boot:spring-boot-starter-data-elasticsearch"
     // Spring Data Jest dependencies for Elasticsearch
-    runtime ("com.github.vanroy:spring-boot-starter-data-jest") {
+    compile ("com.github.vanroy:spring-boot-starter-data-jest") {
         exclude module: 'commons-logging'
     }
     // log4j needed to create embedded elasticsearch instance
