@@ -140,3 +140,11 @@ jhipster:
 # ===================================================================
 
 # application:
+# web3j
+web3j:
+   
+    client-address: http://localhost:7545/
+    httpTimeoutSeconds: 600
+    #client-address: https://rinkeby.infura.io/
+   # network-id: 15
+   
