@@ -16,43 +16,21 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.liquibase.LiquibaseProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.servlet.ServletComponentScan;
-import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
-import org.web3j.abi.EventEncoder;
-import org.web3j.abi.FunctionReturnDecoder;
-import org.web3j.abi.TypeReference;
-import org.web3j.abi.datatypes.Address;
-import org.web3j.abi.datatypes.Event;
-import org.web3j.abi.datatypes.Utf8String;
-import org.web3j.abi.datatypes.generated.Uint256;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.DefaultBlockParameterName;
-import org.web3j.protocol.core.methods.request.EthFilter;
-import org.web3j.protocol.core.methods.response.EthCoinbase;
-import org.web3j.protocol.core.methods.response.EthGetTransactionCount;
-import org.web3j.protocol.core.methods.response.EthLog;
-import org.web3j.protocol.core.methods.response.Transaction;
 import org.web3j.crypto.Credentials;
-
-import akka.actor.ActorRef;
-import akka.actor.ActorSystem;
-import akka.event.Logging;
-import akka.event.LoggingAdapter;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
-import java.io.IOException;
 import java.math.BigInteger;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
 
 import io.blocko.ethsearch.contracts.EthBoard;
-import static io.blocko.ethsearch.contracts.EthBoard.ADDEDPOST_EVENT;
 
 @SpringBootApplication
 @EnableConfigurationProperties({LiquibaseProperties.class, ApplicationProperties.class})
@@ -107,8 +85,7 @@ public class EthsearchApp {
     public static void main(String[] args) {
         SpringApplication app = new SpringApplication(EthsearchApp.class);
         DefaultProfileUtil.addDefaultProfile(app);
-        ApplicationContext appContext = app.run(args);
-        Environment env = appContext.getEnvironment();
+        Environment env = app.run(args).getEnvironment();
         logApplicationStartup(env);
     }
 
@@ -143,7 +120,6 @@ public class EthsearchApp {
             contextPath,
             env.getActiveProfiles());
     }
-
 
     @PostConstruct
     public void listen() throws Exception {
@@ -182,17 +158,17 @@ public class EthsearchApp {
         //     }
         // );
 
-        Credentials credentials = Credentials.create(PRIVATE_KEY);
-        EthBoard ethBoard = EthBoard.load(CONTRACT_ADDRESS, web3j, credentials, GAS_PRICE, GAS_LIMIT);
+        // Credentials credentials = Credentials.create(PRIVATE_KEY);
+        // EthBoard ethBoard = EthBoard.load(CONTRACT_ADDRESS, web3j, credentials, GAS_PRICE, GAS_LIMIT);
 
-        ethBoard.addedPostEventObservable(DefaultBlockParameterName.EARLIEST, DefaultBlockParameterName.LATEST)
-        .subscribe(response -> {
-            // log.debug("ethLog {} {} {} {} {} {}", response.account, response.postID, response.ownerName,
-            //  response.title, response.content, response.log);
-            log.debug("AddedPostEvent {}", response);
-        });
+        // ethBoard.addedPostEventObservable(DefaultBlockParameterName.EARLIEST, DefaultBlockParameterName.LATEST)
+        // .subscribe(response -> {
+        //     // log.debug("ethLog {} {} {} {} {} {}", response.account, response.postID, response.ownerName,
+        //     //  response.title, response.content, response.log);
+        //     log.debug("AddedPostEvent {}", response);
+        // });
 
-        log.info("Subscribed");
+        // log.info("Subscribed");
     }
 
     @PreDestroy

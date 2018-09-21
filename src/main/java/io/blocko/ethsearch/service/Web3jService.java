@@ -1,18 +1,17 @@
-package io.blocko.ethsearch.watch;
+package io.blocko.ethsearch.service;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.math.BigInteger;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.TimeUnit;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.stereotype.Service;
-import org.web3j.abi.FunctionReturnDecoder;
 import org.web3j.protocol.Web3j;
-import org.web3j.protocol.core.DefaultBlockParameter;
 import org.web3j.protocol.core.DefaultBlockParameterName;
 import org.web3j.protocol.core.methods.request.EthFilter;
 import org.web3j.protocol.core.methods.response.EthBlock;
@@ -21,6 +20,7 @@ import org.web3j.protocol.core.methods.response.EthGetStorageAt;
 import rx.Subscription;
 
 @Service
+@Transactional
 public class Web3jService {
 
     private final Logger log = LoggerFactory.getLogger(Web3jService.class);
@@ -67,5 +67,4 @@ public class Web3jService {
             log.debug("{} {}", ethLog.getAddress(), ethLog.getData());
         });
     }
-
 }

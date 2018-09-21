@@ -18,6 +18,8 @@ import org.web3j.protocol.core.methods.response.EthBlock;
 import org.web3j.protocol.core.methods.response.EthBlock.TransactionObject;
 import org.web3j.protocol.core.methods.response.EthBlock.TransactionResult;
 
+import io.blocko.ethsearch.service.Web3jService;
+
 // @Component
 public class SmartContractWatchDaemon {
 
