@@ -30,7 +30,7 @@ import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.Collection;
 
-import io.blocko.ethsearch.contracts.EthBoard;
+import io.blocko.ethsearch.contract.EthBoard;
 
 @SpringBootApplication
 @EnableConfigurationProperties({LiquibaseProperties.class, ApplicationProperties.class})

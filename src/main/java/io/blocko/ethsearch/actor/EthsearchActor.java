@@ -1,4 +1,4 @@
-package io.blocko.ethsearch.actors;
+package io.blocko.ethsearch.actor;
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;

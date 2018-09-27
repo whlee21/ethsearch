@@ -24,16 +24,16 @@ import org.web3j.protocol.core.methods.response.EthGetBalance;
 import org.web3j.protocol.core.methods.response.EthGetTransactionCount;
 
 import io.blocko.ethsearch.config.ApplicationProperties;
-import io.blocko.ethsearch.contracts.EthBoard;
+import io.blocko.ethsearch.contract.EthBoard;
 
 @Service
 @Transactional
-public class EthBoardEventService {
+public class PostEventService {
 
-    private final Logger log = LoggerFactory.getLogger(EthBoardEventService.class);
+    private final Logger log = LoggerFactory.getLogger(PostEventService.class);
 
-    private String CONTRACT_ADDRESS = "19023a1DD51e44A53221e6ea0a4722c6763974C2";
-    private String PRIVATE_KEY = "81bd7f6498d0642e5900b9cde860180aabe4b5d275617a15dace4ccc05a18207";
+    private String PRIVATE_KEY = "0x81bd7f6498d0642e5900b9cde860180aabe4b5d275617a15dace4ccc05a18207";
+    // private String PRIVATE_KEY = "742a02a084659d55ac8e4c26ffa6fa9161712d5b1af1f864e145c937651c767c";
     private BigInteger GAS_LIMIT = BigInteger.valueOf(80_000_000L);
     private BigInteger GAS_PRICE = BigInteger.valueOf(2_000_000_000L);
 
@@ -42,7 +42,7 @@ public class EthBoardEventService {
 
     private Credentials credentials;
 
-    public EthBoardEventService(Web3j web3j, ApplicationProperties applicationProperties) {
+    public PostEventService(Web3j web3j, ApplicationProperties applicationProperties) {
         this.web3j = web3j;
         this.contractAddress = applicationProperties.getContractAddress();
     }
@@ -52,11 +52,12 @@ public class EthBoardEventService {
         Credentials credentials = Credentials.create(PRIVATE_KEY);
         EthBoard ethBoard = EthBoard.load(contractAddress, web3j, credentials, GAS_PRICE, GAS_LIMIT);
 
+        log.debug("contract address {}", ethBoard.getContractAddress());
+
         ethBoard.addedPostEventObservable(DefaultBlockParameterName.EARLIEST, DefaultBlockParameterName.LATEST)
         .subscribe(response -> {
-            // log.debug("ethLog {} {} {} {} {} {}", response.account, response.postID, response.ownerName,
-            //  response.title, response.content, response.log);
-            log.debug("AddedPostEvent {}", response);
+            log.debug("ethLog {} {} {} {} {} {}", response.ownerAccount, response.postID,
+             response.firstName, response.lastName, response.title, response.content);
         });
 
         log.info("Subscribed");

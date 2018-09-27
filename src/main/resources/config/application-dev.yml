@@ -140,5 +140,5 @@ web3j:
     # network-id: 5777
 
 application:
-    # contract-address: '0x25df8DF1376ea689611EF258810690D2d67C5F3E'
-    contract-address: '0xdf803dc2775647c46d7aa6b882760832c88dfc9d'
+    # contract-address: 25df8DF1376ea689611EF258810690D2d67C5F3E
+    contract-address: df803dc2775647c46d7aa6b882760832c88dfc9d

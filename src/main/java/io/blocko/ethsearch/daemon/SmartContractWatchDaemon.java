@@ -1,4 +1,4 @@
-package io.blocko.ethsearch.watch;
+package io.blocko.ethsearch.daemon;
 
 import java.math.BigInteger;
 import java.util.concurrent.CompletableFuture;
