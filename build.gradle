@@ -127,7 +127,6 @@ apply from: 'gradle/sonar.gradle'
 apply from: 'gradle/swagger.gradle'
 apply from: 'gradle/web3j.gradle'
 //jhipster-needle-gradle-apply-from - JHipster will add additional gradle scripts to be applied here
-apply from: 'gradle/web3j.gradle'
 
 if (project.hasProperty('prod')) {
     apply from: 'gradle/profile_prod.gradle'
