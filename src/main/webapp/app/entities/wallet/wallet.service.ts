@@ -12,9 +12,14 @@ type EntityArrayResponseType = HttpResponse<IWallet[]>;
 @Injectable({ providedIn: 'root' })
 export class WalletService {
     private resourceUrl = SERVER_API_URL + 'api/wallets';
+    private generateResourceUrl = SERVER_API_URL + 'api/wallets/generate';
     private resourceSearchUrl = SERVER_API_URL + 'api/_search/wallets';
 
     constructor(private http: HttpClient) {}
+
+    generate(wallet: IWallet): Observable<EntityResponseType> {
+        return this.http.post<IWallet>(this.generateResourceUrl, wallet, { observe: 'response' });
+    }
 
     create(wallet: IWallet): Observable<EntityResponseType> {
         return this.http.post<IWallet>(this.resourceUrl, wallet, { observe: 'response' });
