@@ -42,6 +42,10 @@ export class WalletUpdateComponent implements OnInit {
         window.history.back();
     }
 
+    generate() {
+        this.subscribeResponse(this.walletService.generate(this.wallet));
+    }
+
     save() {
         this.isSaving = true;
         if (this.wallet.id !== undefined) {
@@ -53,6 +57,15 @@ export class WalletUpdateComponent implements OnInit {
 
     private subscribeToSaveResponse(result: Observable<HttpResponse<IWallet>>) {
         result.subscribe((res: HttpResponse<IWallet>) => this.onSaveSuccess(), (res: HttpErrorResponse) => this.onSaveError());
+    }
+
+    private subscribeResponse(result: Observable<HttpResponse<IWallet>>) {
+        result.subscribe((res: HttpResponse<IWallet>) => this.onSuccess(res), (res: HttpErrorResponse) => this.onError(res.message));
+    }
+
+    private onSuccess(result: HttpResponse<IWallet>) {
+        this.wallet.account = result.body.account;
+        this.wallet.privateKey = result.body.privateKey;
     }
 
     private onSaveSuccess() {
