@@ -20,6 +20,7 @@ import io.blocko.ethsearch.domain.Wallet;
 import io.blocko.ethsearch.repository.WalletRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.web3j.crypto.CipherException;
 import org.web3j.crypto.Credentials;
 import org.web3j.crypto.WalletUtils;
@@ -42,6 +43,8 @@ import org.web3j.crypto.Keys;
 import org.web3j.crypto.TransactionEncoder;
 import org.web3j.utils.Convert;
 import org.web3j.utils.Numeric;
+
+import io.blocko.ethsearch.config.ApplicationProperties;
 import io.blocko.ethsearch.contract.EthBoard;
 
 import java.math.BigInteger;
@@ -76,7 +79,7 @@ public class PostService {
 
     private final UserRepository userRepository;
 
-    private final String contractAddress = "0x25df8DF1376ea689611EF258810690D2d67C5F3E";
+    private final String contractAddress;
 
     private final BigInteger GAS_PRICE = BigInteger.valueOf(1L);
     private final BigInteger GAS_LIMIT = BigInteger.valueOf(2100000L);
@@ -85,17 +88,18 @@ public class PostService {
     Web3j web3j;
     //Credentials credentials;
 
-    public PostService(PostRepository postRepository, PostSearchRepository postSearchRepository, 
-    WalletRepository walletRepository, UserRepository userRepository) {
+    public PostService(PostRepository postRepository, PostSearchRepository postSearchRepository,
+    WalletRepository walletRepository, UserRepository userRepository, ApplicationProperties applicationProperties) {
         this.postRepository = postRepository;
         this.postSearchRepository = postSearchRepository;
         this.walletRepository = walletRepository;
         this.userRepository = userRepository;
+        contractAddress = applicationProperties.getContractAddress();
     }
 
     private EthBoard loadContract() {
         //get wallet for current user
-        List<Wallet> wallets = walletRepository.findByUserIsCurrentUser();        
+        List<Wallet> wallets = walletRepository.findByUserIsCurrentUser();
         //temporary code
         String privateKey = new String();
         for(Wallet wallet: wallets) {
@@ -126,7 +130,7 @@ public class PostService {
 
         //add post
         TransactionReceipt addpost = contract.addPost(post.getTitle(), post.getContent(), user.getLogin(), user.getFirstName(), user.getLastName()).send();
-        //temporary code 
+        //temporary code
         //return last added post
         BigInteger numPost = contract.getNumOfPosts().send();
         log.info("=================================================");
@@ -176,7 +180,7 @@ public class PostService {
         log.debug("Request to get Post : {}", id);
         //load contract
         EthBoard contract = loadContract();
-        
+
         Post post = new Post();
         post.load(contract.getPost(BigInteger.valueOf(id)).send());
         Optional<Post> result = Optional.of(post);
