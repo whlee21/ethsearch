@@ -4,6 +4,7 @@ openapi: "3.0.1"
 info:
   version: 0.0.1
   title: "Ethereum Smart Contract Search"
+paths: {}
 # host: petstore.swagger.io
 # basePath: /v2
 # tags:

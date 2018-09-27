@@ -8,6 +8,7 @@
             "entities": {
                 "main": "Entities",
                 "wallet": "Wallet",
+                "post": "Post",
                 "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
             },
             "account": {

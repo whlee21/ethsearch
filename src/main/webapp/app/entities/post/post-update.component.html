@@ -1,0 +1,71 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+            <h2 id="jhi-post-heading" jhiTranslate="ethsearchApp.post.home.createOrEditLabel">Create or edit a Post</h2>
+            <div>
+                <jhi-alert-error></jhi-alert-error>
+                <div class="form-group" [hidden]="!post.id">
+                    <label for="id" jhiTranslate="global.field.id">ID</label>
+                    <input type="text" class="form-control" id="id" name="id"
+                        [(ngModel)]="post.id" readonly />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="ethsearchApp.post.title" for="field_title">Title</label>
+                    <input type="text" class="form-control" name="title" id="field_title"
+                        [(ngModel)]="post.title" required/>
+                    <div [hidden]="!(editForm.controls.title?.dirty && editForm.controls.title?.invalid)">
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.title?.errors?.required" jhiTranslate="entity.validation.required">
+                        This field is required.
+                        </small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="ethsearchApp.post.content" for="field_content">Content</label>
+                    <input type="text" class="form-control" name="content" id="field_content"
+                        [(ngModel)]="post.content" />
+                </div>
+                <!--
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="ethsearchApp.post.ownerId" for="field_ownerId">Owner Id</label>
+                    <input type="text" class="form-control" name="ownerId" id="field_ownerId"
+                        [(ngModel)]="post.ownerId" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="ethsearchApp.post.ownerFirstName" for="field_ownerFirstName">Owner First Name</label>
+                    <input type="text" class="form-control" name="ownerFirstName" id="field_ownerFirstName"
+                        [(ngModel)]="post.ownerFirstName" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="ethsearchApp.post.ownerLastName" for="field_ownerLastName">Owner Last Name</label>
+                    <input type="text" class="form-control" name="ownerLastName" id="field_ownerLastName"
+                        [(ngModel)]="post.ownerLastName" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="ethsearchApp.post.ownerAccount" for="field_ownerAccount">Owner Account</label>
+                    <input type="text" class="form-control" name="ownerAccount" id="field_ownerAccount"
+                        [(ngModel)]="post.ownerAccount" minlength="42" maxlength="42"/>
+                    <div [hidden]="!(editForm.controls.ownerAccount?.dirty && editForm.controls.ownerAccount?.invalid)">
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.ownerAccount?.errors?.minlength" jhiTranslate="entity.validation.minlength" translateValues="{ min: 42 }">
+                        This field is required to be at least 42 characters.
+                        </small>
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.ownerAccount?.errors?.maxlength" jhiTranslate="entity.validation.maxlength" translateValues="{ max: 42 }">
+                        This field cannot be longer than 42 characters.
+                        </small>
+                    </div>
+                </div>
+                -->
+            </div>
+            <div>
+                <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">
+                    <fa-icon [icon]="'ban'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+                </button>
+                <button type="submit" id="save-entity" [disabled]="editForm.form.invalid || isSaving" class="btn btn-primary">
+                    <fa-icon [icon]="'save'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

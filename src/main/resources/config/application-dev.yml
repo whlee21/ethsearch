@@ -60,6 +60,9 @@ spring:
             properties:
                 path:
                     home: build/elasticsearch
+        jest:
+            uri: http://192.168.0.85:9200
+
     liquibase:
         contexts: dev
     mail:
@@ -131,11 +134,11 @@ jhipster:
 
 # web3j
 web3j:
-    # client-address: https://rinkeby.infura.io/v3/f386e7040bea41feac06f89b3128adb8
-    # client-address: https://ropsten.etherscan.io/
-    # client-address: /Users/whlee21/.rinkeby/geth.ipc
-    client-address: http://localhost:8545/
-    network-id: 15
+    client-address: http://localhost:7545/
     httpTimeoutSeconds: 600
+    #client-address: https://rinkeby.infura.io/
+    # network-id: 5777
 
-# application:
+application:
+    # contract-address: '0x25df8DF1376ea689611EF258810690D2d67C5F3E'
+    contract-address: '0xdf803dc2775647c46d7aa6b882760832c88dfc9d'

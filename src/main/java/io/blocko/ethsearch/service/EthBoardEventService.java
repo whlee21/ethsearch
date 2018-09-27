@@ -23,6 +23,7 @@ import org.web3j.protocol.core.methods.response.EthCoinbase;
 import org.web3j.protocol.core.methods.response.EthGetBalance;
 import org.web3j.protocol.core.methods.response.EthGetTransactionCount;
 
+import io.blocko.ethsearch.config.ApplicationProperties;
 import io.blocko.ethsearch.contracts.EthBoard;
 
 @Service
@@ -33,45 +34,50 @@ public class EthBoardEventService {
 
     private String CONTRACT_ADDRESS = "19023a1DD51e44A53221e6ea0a4722c6763974C2";
     private String PRIVATE_KEY = "81bd7f6498d0642e5900b9cde860180aabe4b5d275617a15dace4ccc05a18207";
-    private BigInteger GAS_LIMIT = BigInteger.valueOf(80000000L);
-    private BigInteger GAS_PRICE = BigInteger.valueOf(2000000000L);
+    private BigInteger GAS_LIMIT = BigInteger.valueOf(80_000_000L);
+    private BigInteger GAS_PRICE = BigInteger.valueOf(2_000_000_000L);
 
-    @Autowired
-    private Web3j web3j;
+    private final Web3j web3j;
+    private String contractAddress;
 
-    Credentials credentials;
+    private Credentials credentials;
 
-    // @PostConstruct
-    // public void listen() throws Exception {
-    //     Credentials credentials = Credentials.create(PRIVATE_KEY);
-    //     EthBoard ethBoard = EthBoard.load(CONTRACT_ADDRESS, web3j, credentials, GAS_PRICE, GAS_LIMIT);
-
-    //     ethBoard.addedPostEventObservable(DefaultBlockParameterName.EARLIEST, DefaultBlockParameterName.LATEST)
-    //     .subscribe(response -> {
-    //         // log.debug("ethLog {} {} {} {} {} {}", response.account, response.postID, response.ownerName,
-    //         //  response.title, response.content, response.log);
-    //         log.debug("AddedPostEvent {}", response);
-    //     });
-
-    //     log.info("Subscribed");
-    // }
+    public EthBoardEventService(Web3j web3j, ApplicationProperties applicationProperties) {
+        this.web3j = web3j;
+        this.contractAddress = applicationProperties.getContractAddress();
+    }
 
     @PostConstruct
-    public void init() throws IOException, CipherException, NoSuchAlgorithmException, NoSuchProviderException,
-            InvalidAlgorithmParameterException {
+    public void listen() throws Exception {
+        Credentials credentials = Credentials.create(PRIVATE_KEY);
+        EthBoard ethBoard = EthBoard.load(contractAddress, web3j, credentials, GAS_PRICE, GAS_LIMIT);
 
-        String file = WalletUtils.generateLightNewWalletFile("piot123", null);
-        credentials = WalletUtils.loadCredentials("piot123", file);
-        log.info("Credentials created: file={}, address={}", file, credentials.getAddress());
-        EthCoinbase coinbase = web3j.ethCoinbase().send();
-        EthGetTransactionCount transactionCount = web3j
-                .ethGetTransactionCount(coinbase.getAddress(), DefaultBlockParameterName.LATEST).send();
-        Transaction transaction = Transaction.createEtherTransaction(coinbase.getAddress(),
-                transactionCount.getTransactionCount(), BigInteger.valueOf(20_000_000_000L), BigInteger.valueOf(21_000),
-                credentials.getAddress(), BigInteger.valueOf(25_000_000_000_000_000L));
-        web3j.ethSendTransaction(transaction).send();
-        EthGetBalance balance = web3j.ethGetBalance(credentials.getAddress(), DefaultBlockParameterName.LATEST).send();
-        log.info("Balance: {}", balance.getBalance().longValue());
+        ethBoard.addedPostEventObservable(DefaultBlockParameterName.EARLIEST, DefaultBlockParameterName.LATEST)
+        .subscribe(response -> {
+            // log.debug("ethLog {} {} {} {} {} {}", response.account, response.postID, response.ownerName,
+            //  response.title, response.content, response.log);
+            log.debug("AddedPostEvent {}", response);
+        });
+
+        log.info("Subscribed");
     }
+
+    // @PostConstruct
+    // public void init() throws IOException, CipherException, NoSuchAlgorithmException, NoSuchProviderException,
+    //         InvalidAlgorithmParameterException {
+
+    //     String file = WalletUtils.generateLightNewWalletFile("piot123", null);
+    //     credentials = WalletUtils.loadCredentials("piot123", file);
+    //     log.info("Credentials created: file={}, address={}", file, credentials.getAddress());
+    //     EthCoinbase coinbase = web3j.ethCoinbase().send();
+    //     EthGetTransactionCount transactionCount = web3j
+    //             .ethGetTransactionCount(coinbase.getAddress(), DefaultBlockParameterName.LATEST).send();
+    //     Transaction transaction = Transaction.createEtherTransaction(coinbase.getAddress(),
+    //             transactionCount.getTransactionCount(), BigInteger.valueOf(20_000_000_000L), BigInteger.valueOf(21_000),
+    //             credentials.getAddress(), BigInteger.valueOf(25_000_000_000_000_000L));
+    //     web3j.ethSendTransaction(transaction).send();
+    //     EthGetBalance balance = web3j.ethGetBalance(credentials.getAddress(), DefaultBlockParameterName.LATEST).send();
+    //     log.info("Balance: {}", balance.getBalance().longValue());
+    // }
 
 }
