@@ -44,6 +44,24 @@ public class WalletResource {
     }
 
     /**
+     * POST  /wallets/generate : Generate a new wallet address.
+     *
+     * @param null
+     * @return the ResponseEntity with status 201 (Created) and with body the new wallet
+     * @throws URISyntaxException if the Location URI syntax is incorrect
+     */
+    @PostMapping("/wallets/generate")
+    @Timed
+    public ResponseEntity<Wallet> generateWalletAddress() throws Exception {
+        log.debug("REST request to generate Wallet address: {}");
+        Wallet result = walletService.generate();
+        //return ResponseEntity.created(new URI("/api/wallets/generate"))
+        //    .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getAccount()))
+        //    .body(result);
+        return new ResponseEntity(result, HttpStatus.CREATED);
+    }
+
+    /**
      * POST  /wallets : Create a new wallet.
      *
      * @param wallet the wallet to create

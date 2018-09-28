@@ -12,6 +12,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
+import org.web3j.crypto.Credentials;
+import org.web3j.crypto.ECKeyPair;
+import org.web3j.crypto.Keys;
+import org.web3j.crypto.TransactionEncoder;
+import org.web3j.utils.Convert;
+import org.web3j.utils.Numeric;
+import java.math.BigInteger;
+
 import java.util.Optional;
 
 import static org.elasticsearch.index.query.QueryBuilders.*;
@@ -32,6 +40,32 @@ public class WalletService {
     public WalletService(WalletRepository walletRepository, WalletSearchRepository walletSearchRepository) {
         this.walletRepository = walletRepository;
         this.walletSearchRepository = walletSearchRepository;
+    }
+
+    public Wallet generate() throws Exception {
+        log.debug("Request to generate Wallet : {}");
+        // create new private/public key pair
+	    ECKeyPair keyPair = Keys.createEcKeyPair();
+
+	    BigInteger publicKey = keyPair.getPublicKey();
+	    String publicKeyHex = Numeric.toHexStringWithPrefix(publicKey);
+
+	    BigInteger privateKey = keyPair.getPrivateKey();
+	    String privateKeyHex = Numeric.toHexStringWithPrefix(privateKey);
+
+	    // create credentials + address from private/public key pair
+	    Credentials credentials = Credentials.create(new ECKeyPair(privateKey, publicKey));
+        String address = credentials.getAddress();
+
+        // print resulting data of new account
+        log.debug("private key: '" + privateKeyHex + "'");
+        log.debug("public key: '" + publicKeyHex + "'");
+        log.debug("address: '" + address + "'\n");
+        Wallet wallet = new Wallet();
+        wallet.setAccount(credentials.getAddress());
+        wallet.setPrivateKey(Numeric.toHexStringWithPrefix(privateKey));
+        //wallet = walletRepository.save(wallet);
+        return wallet;
     }
 
     /**

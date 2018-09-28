@@ -63,6 +63,9 @@
                 <button type="submit" id="save-entity" [disabled]="editForm.form.invalid || isSaving" class="btn btn-primary">
                     <fa-icon [icon]="'save'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
                 </button>
+                <button type="button" id="generate-entity" class="btn btn-primary" (click)="generate()">
+                    <fa-icon [icon]="'search'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.generate">Generate</span>
+                </button>
             </div>
         </form>
     </div>
