@@ -1,0 +1,55 @@
+openapi: 3.0.1
+info:
+  version: 0.0.1
+  title: Ethereum Smart Contract Search
+servers: 
+  - url: http://192.168.0.85:8080/{basePath}
+    variables:
+      basePath:
+        default: api
+paths:
+  /board:
+    summary: Manage blog posts
+    description: API collection of managing blog posts
+    get:
+      description: Get the posts
+      operationId: getAllPosts
+      responses:
+        '200':
+          description: success
+          content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Post'
+components:
+  schemas:
+    Post:
+      type: object
+      required:
+        - id
+        - name
+        - title
+        - content
+        - userId
+        - firstName
+        - lastName
+        - account
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        title:
+          type: string
+        content:
+          type: string
+        userId:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        account:
+          type: string

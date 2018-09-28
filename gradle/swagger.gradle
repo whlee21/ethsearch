@@ -6,7 +6,7 @@ apply plugin: 'org.openapi.generator'
 
 openApiGenerate {
     generatorName = "spring"
-    inputSpec = "$rootDir/src/main/resources/swagger/api.yml".toString()
+    inputSpec = "$rootDir/src/main/resources/swagger/openapi.yaml".toString()
     outputDir = "$buildDir/openapi".toString()
     apiPackage = "io.blocko.ethsearch.web.api"
     modelPackage = "io.blocko.ethsearch.web.api.model"

@@ -1,95 +1,53 @@
 package io.blocko.ethsearch.service;
 
-import io.blocko.ethsearch.domain.Post;
-import io.blocko.ethsearch.domain.User;
-import io.blocko.ethsearch.repository.PostRepository;
-import io.blocko.ethsearch.repository.UserRepository;
-import io.blocko.ethsearch.repository.search.PostSearchRepository;
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-
-
-import io.blocko.ethsearch.domain.Wallet;
-import io.blocko.ethsearch.repository.WalletRepository;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.web3j.crypto.CipherException;
 import org.web3j.crypto.Credentials;
-import org.web3j.crypto.WalletUtils;
 import org.web3j.protocol.Web3j;
-import org.web3j.protocol.core.DefaultBlockParameterName;
-import org.web3j.protocol.core.methods.request.Transaction;
-import org.web3j.protocol.core.methods.response.EthAccounts;
-import org.web3j.protocol.core.methods.response.EthCoinbase;
-import org.web3j.protocol.core.methods.response.EthGetBalance;
-import org.web3j.protocol.core.methods.response.EthGetTransactionCount;
-import org.web3j.protocol.core.methods.response.EthGetTransactionReceipt;
-import org.web3j.protocol.core.methods.response.EthSendTransaction;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
-import org.web3j.protocol.http.HttpService;
-import org.web3j.protocol.core.methods.response.Web3ClientVersion;
-import org.web3j.protocol.core.RemoteCall;
-import org.web3j.crypto.Credentials;
-import org.web3j.crypto.ECKeyPair;
-import org.web3j.crypto.Keys;
-import org.web3j.crypto.TransactionEncoder;
-import org.web3j.utils.Convert;
-import org.web3j.utils.Numeric;
+import org.web3j.tuples.generated.Tuple7;
 
 import io.blocko.ethsearch.config.ApplicationProperties;
 import io.blocko.ethsearch.contract.EthBoard;
-
-import java.math.BigInteger;
-import java.util.Collection;
-import java.util.List;
-import java.lang.Iterable;
-import java.util.ArrayList;
-import java.util.Arrays;
-
-
+import io.blocko.ethsearch.domain.User;
+import io.blocko.ethsearch.domain.Wallet;
+import io.blocko.ethsearch.repository.UserRepository;
+import io.blocko.ethsearch.repository.WalletRepository;
+import io.blocko.ethsearch.repository.search.PostSearchRepository;
 import io.blocko.ethsearch.security.SecurityUtils;
-import io.blocko.ethsearch.web.rest.errors.*;
+import io.blocko.ethsearch.web.api.model.Post;
+import io.blocko.ethsearch.web.rest.errors.InternalServerErrorException;
 
-
-import java.util.Optional;
-
-import static org.elasticsearch.index.query.QueryBuilders.*;
 import static io.blocko.ethsearch.config.Constants.*;
+import static org.elasticsearch.index.query.QueryBuilders.*;
 
-/**
- * Service Implementation for managing Post.
- */
 @Service
 @Transactional
-public class PostService {
-    private final Logger log = LoggerFactory.getLogger(PostService.class);
+public class NewPostService {
 
-    private final PostRepository postRepository;
+    private final Logger log = LoggerFactory.getLogger(NewPostService.class);
 
     private final PostSearchRepository postSearchRepository;
-
     private final WalletRepository walletRepository;
-
     private final UserRepository userRepository;
-
     private final String contractAddress;
 
 	@Autowired
     Web3j web3j;
     //Credentials credentials;
 
-    public PostService(PostRepository postRepository, PostSearchRepository postSearchRepository,
-            WalletRepository walletRepository, UserRepository userRepository,
-            ApplicationProperties applicationProperties) {
-        this.postRepository = postRepository;
+    public NewPostService(PostSearchRepository postSearchRepository, WalletRepository walletRepository,
+            UserRepository userRepository, ApplicationProperties applicationProperties) {
         this.postSearchRepository = postSearchRepository;
         this.walletRepository = walletRepository;
         this.userRepository = userRepository;
@@ -137,7 +95,10 @@ public class PostService {
         log.info("get post: " + contract.getPost(numPost.subtract(BigInteger.valueOf(1L))).send());
         log.info("=================================================");
         Post result = new Post();
-        result.load(contract.getPost(numPost.subtract(BigInteger.valueOf(1L))).send());
+        Tuple7<BigInteger, String, String, String, String, String, String> contractPost = contract.getPost(numPost.subtract(BigInteger.valueOf(1L))).send();
+
+        result.setId(contractPost.getValue1().longValue());
+
         return result;
     }
 
@@ -194,8 +155,8 @@ public class PostService {
      */
     public void delete(Long id) {
         log.debug("Request to delete Post : {}", id);
-        postRepository.deleteById(id);
-        postSearchRepository.deleteById(id);
+        // postRepository.deleteById(id);
+        // postSearchRepository.deleteById(id);
     }
 
     /**
