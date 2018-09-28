@@ -1,30 +1,24 @@
 package io.blocko.ethsearch.service;
 
-import java.io.IOException;
-import java.math.BigInteger;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
+import static io.blocko.ethsearch.config.Constants.GAS_LIMIT;
+import static io.blocko.ethsearch.config.Constants.GAS_PRICE;
 
 import javax.annotation.PostConstruct;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.web3j.crypto.CipherException;
 import org.web3j.crypto.Credentials;
-import org.web3j.crypto.WalletUtils;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.DefaultBlockParameterName;
-import org.web3j.protocol.core.methods.request.Transaction;
-import org.web3j.protocol.core.methods.response.EthCoinbase;
-import org.web3j.protocol.core.methods.response.EthGetBalance;
-import org.web3j.protocol.core.methods.response.EthGetTransactionCount;
 
 import io.blocko.ethsearch.config.ApplicationProperties;
 import io.blocko.ethsearch.contract.EthBoard;
+import io.blocko.ethsearch.contract.EthBoard.AddedPostEventResponse;
+import io.blocko.ethsearch.domain.Post;
+import io.blocko.ethsearch.repository.search.PostSearchRepository;
 
 @Service
 @Transactional
@@ -34,16 +28,16 @@ public class PostEventService {
 
     private String PRIVATE_KEY = "0x81bd7f6498d0642e5900b9cde860180aabe4b5d275617a15dace4ccc05a18207";
     // private String PRIVATE_KEY = "742a02a084659d55ac8e4c26ffa6fa9161712d5b1af1f864e145c937651c767c";
-    private BigInteger GAS_LIMIT = BigInteger.valueOf(80_000_000L);
-    private BigInteger GAS_PRICE = BigInteger.valueOf(2_000_000_000L);
 
     private final Web3j web3j;
     private String contractAddress;
+    private PostSearchRepository repository;
 
     private Credentials credentials;
 
-    public PostEventService(Web3j web3j, ApplicationProperties applicationProperties) {
+    public PostEventService(Web3j web3j, PostSearchRepository repository, ApplicationProperties applicationProperties) {
         this.web3j = web3j;
+        this.repository = repository;
         this.contractAddress = applicationProperties.getContractAddress();
     }
 
@@ -55,12 +49,26 @@ public class PostEventService {
         log.debug("contract address {}", ethBoard.getContractAddress());
 
         ethBoard.addedPostEventObservable(DefaultBlockParameterName.EARLIEST, DefaultBlockParameterName.LATEST)
-        .subscribe(response -> {
-            log.debug("ethLog {} {} {} {} {} {}", response.ownerAccount, response.postID,
-             response.firstName, response.lastName, response.title, response.content);
-        });
+                .subscribe(event -> {
+                    log.debug("AddedPostEvent {} {} {} {} {} {}", event.ownerAccount, event.postID, event.firstName,
+                            event.lastName, event.title, event.content);
+                    save(event);
+                });
 
         log.info("Subscribed");
+    }
+
+    @Async
+    public void save(AddedPostEventResponse event) {
+        Post post = new Post();
+        post.setId(event.postID.longValue());
+        post.setOwnerAccount(event.ownerAccount);
+        post.setOwnerId(event.ownerId);
+        post.setOwnerFirstName(event.firstName);
+        post.setOwnerLastName(event.lastName);
+        post.setTitle(event.title);
+        post.setContent(event.content);
+        repository.save(post);
     }
 
     // @PostConstruct
