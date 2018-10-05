@@ -140,4 +140,4 @@ web3j:
 
 application:
     # contract-address: '0x25df8DF1376ea689611EF258810690D2d67C5F3E'
-    contract-address: 97e708ca630f32e029aa8c438af851c311c60d9c
+    contract-address: 25df8DF1376ea689611EF258810690D2d67C5F3E

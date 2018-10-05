@@ -154,6 +154,7 @@ export class PostComponent implements OnInit, OnDestroy {
         if (this.predicate !== 'id') {
             result.push('id');
         }
+        console.log(result);
         return result;
     }
 

@@ -1,0 +1,46 @@
+<div class="example-container mat-elevation-z8">
+    <mat-table class="list-table-style" #table [dataSource]="dataSource">
+
+        <ng-container matColumnDef="id">
+            <mat-header-cell *matHeaderCellDef> ID </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.id}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="title">
+            <mat-header-cell *matHeaderCellDef> Title </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.title}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="content">
+            <mat-header-cell *matHeaderCellDef> Content </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.content}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="ownerId">
+            <mat-header-cell *matHeaderCellDef> Owner ID </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.ownerId}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="ownerFirstName">
+            <mat-header-cell *matHeaderCellDef> Owner First Name </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.ownerFirstName}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="ownerLastName">
+            <mat-header-cell *matHeaderCellDef> Owner Last Name </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.ownerLastName}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="ownerAccount">
+            <mat-header-cell *matHeaderCellDef> Owner Account </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.ownerAccount}} </mat-cell>
+        </ng-container>
+
+        <mat-header-row class="list-header-style" *matHeaderRowDef="displayedColumns">
+        </mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;" (click)="rowSelect(row)"></mat-row>
+    </mat-table>
+
+    <mat-paginator #paginator [pageSize]="5" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons>
+    </mat-paginator>
+</div>

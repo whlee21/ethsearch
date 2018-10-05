@@ -1,6 +1,8 @@
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { ProdConfig } from './blocks/config/prod.config';
 import { EthsearchAppModule } from './app.module';
+// hammerjs import 추가
+import 'hammerjs';
 
 ProdConfig();
 

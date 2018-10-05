@@ -17,20 +17,30 @@ import { EthsearchAppRoutingModule } from './app-routing.module';
 import { EthsearchHomeModule } from './home/home.module';
 import { EthsearchAccountModule } from './account/account.module';
 import { EthsearchEntityModule } from './entities/entity.module';
+import { PostsModule } from './posts/posts.module';
 import * as moment from 'moment';
+
+// BrowserAnimationsModule import 구문 추가
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
+// Material Table Component 사용을 위한 MatTableModule import
+import { MatTableModule } from '@angular/material/table';
 // jhipster-needle-angular-add-module-import JHipster will add new module here
 import { JhiMainComponent, NavbarComponent, FooterComponent, PageRibbonComponent, ActiveMenuDirective, ErrorComponent } from './layouts';
 
 @NgModule({
     imports: [
         BrowserModule,
+        BrowserAnimationsModule, // BrowserAnimationsModule 추가
+        MatTableModule, // MatTableModule 추가
         EthsearchAppRoutingModule,
         Ng2Webstorage.forRoot({ prefix: 'jhi', separator: '-' }),
         EthsearchSharedModule,
         EthsearchCoreModule,
         EthsearchHomeModule,
         EthsearchAccountModule,
-        EthsearchEntityModule
+        EthsearchEntityModule,
+        PostsModule
         // jhipster-needle-angular-add-module JHipster will add new module here
     ],
     declarations: [JhiMainComponent, NavbarComponent, ErrorComponent, PageRibbonComponent, ActiveMenuDirective, FooterComponent],

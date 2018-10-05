@@ -1,0 +1,39 @@
+<div class="postSearch-outer">
+  <!--
+    <p myColor>test</p>
+    <div class="d-flex align-items-center p-3 my-3 text-white-50 bg-purple rounded box-shadow">
+        <img class="mr-3" src="../../content/images/hipster.png" alt="" width="48" height="48">
+        <div class="lh-100">
+          <h5 #resultStatus class="mb-0 text-black lh-100">Search Result : {{searchTitle| uppercase}}</h5> 
+        </div>
+    </div>
+  -->
+  <!--
+    <div class="example-container">
+        <mat-form-field>
+            <mat-select placeholder="게시글 종류" #postCategorySelect [(ngModel)]="selectedValue" (ngModelChange)="changeValue(postCategorySelect.value)">
+                <mat-option *ngFor="let category of postCategory" [value]="category.value">
+                    {{ category.viewValue }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+        <button mat-raised-button color="primary" (click)="clearCondition()">검색 초기화</button>
+        <button mat-raised-button color="primary" (click)="changeDOM()">DOM 직접 변경</button>
+    </div>
+  -->
+    <div>
+        <jhi-search-box [postCategory]="displayCategoryName" 
+                        [selectedValue]="selectedValue"
+                        (searchEvent)="changeTitleBar($event)">
+        </jhi-search-box>
+
+    </div>
+    <div>
+        <jhi-detail-box>
+            </jhi-search-box>
+    </div>
+    <div>
+        <jhi-list-box>
+            </jhi-search-box>
+    </div>
+</div>

@@ -1,0 +1,33 @@
+<mat-card class="post-detail">
+    <mat-card-header class="detail-header-style">
+     <!-- <div mat-card-avatar class="example-header-image"></div> -->
+      <mat-card-title>제목 : {{post.title}}</mat-card-title>
+      <mat-card-subtitle>저자 : {{post.ownerId}}</mat-card-subtitle>
+    </mat-card-header>
+    <!-- <img mat-card-image class="post-image" src="../../../content/images/hipster.png"> -->
+    <mat-card-content class="post-content-style">
+        <dl class="row-md jh-entity-details">
+        <dt><span jhiTranslate="ethsearchApp.post.content">Content</span></dt>
+        <dd>
+            <span>{{post.content}}</span>
+        </dd>
+        <dt><span jhiTranslate="ethsearchApp.post.ownerFirstName">Owner First Name</span></dt>
+        <dd>
+            <span>{{post.ownerFirstName}}</span>
+        </dd>
+        <dt><span jhiTranslate="ethsearchApp.post.ownerLastName">Owner Last Name</span></dt>
+        <dd>
+            <span>{{post.ownerLastName}}</span>
+        </dd>
+        <dt><span jhiTranslate="ethsearchApp.post.ownerAccount">Owner Account</span></dt>
+        <dd>
+            <span>{{post.ownerAccount}}</span>
+        </dd>
+        </dl>
+    </mat-card-content>
+ 
+    <!-- <mat-card-actions>
+      <button mat-button mat-raised-button color="primary">바로 구입</button>
+    </mat-card-actions>
+  -->
+  </mat-card>

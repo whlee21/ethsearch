@@ -38,6 +38,7 @@ export class PostService {
     }
 
     search(req?: any): Observable<EntityArrayResponseType> {
+        console.log(req);
         const options = createRequestOption(req);
         return this.http.get<IPost[]>(this.resourceSearchUrl, { params: options, observe: 'response' });
     }
